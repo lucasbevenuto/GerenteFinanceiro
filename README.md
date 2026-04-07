@@ -99,11 +99,12 @@ dotnet run --project ./FinanceManager.API
 
 ## Acesso local
 
-Com a aplicação em execução, você pode acessar:
+Com a aplicação em execução, acesse no navegador a URL exibida no terminal pelo `dotnet run`.
 
-- Interface web local: `http://localhost:5221`
-- API HTTP: `http://localhost:5221`
-- API HTTPS: `https://localhost:7195`
+Essa mesma URL pode ser usada para:
+
+- abrir a interface web local
+- consumir os endpoints da API
 
 Na primeira execução, a aplicação garante automaticamente a criação do banco com `EnsureCreated()`.
 
