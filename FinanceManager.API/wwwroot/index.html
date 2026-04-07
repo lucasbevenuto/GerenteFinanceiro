@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gerente Financeiro</title>
+    <style>
+        :root {
+            --bg: #f4efe7;
+            --panel: rgba(255, 252, 247, 0.94);
+            --panel-strong: #fffaf2;
+            --text: #1f1a17;
+            --muted: #6c625a;
+            --line: rgba(86, 70, 54, 0.16);
+            --accent: #0f766e;
+            --accent-strong: #115e59;
+            --accent-soft: rgba(15, 118, 110, 0.12);
+            --danger: #b42318;
+            --shadow: 0 18px 50px rgba(55, 39, 24, 0.12);
+            --radius: 22px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(15, 118, 110, 0.18), transparent 28%),
+                radial-gradient(circle at top right, rgba(193, 126, 43, 0.14), transparent 24%),
+                linear-gradient(180deg, #f9f4eb 0%, var(--bg) 100%);
+        }
+
+        .shell {
+            width: min(1240px, calc(100% - 32px));
+            margin: 32px auto 48px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(17, 94, 89, 0.95), rgba(20, 83, 45, 0.88));
+            color: #f8fffc;
+            padding: 32px;
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto -60px -60px auto;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .hero h1 {
+            margin: 0 0 8px;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1;
+        }
+
+        .hero p {
+            margin: 0;
+            max-width: 720px;
+            color: rgba(248, 255, 252, 0.86);
+            font-size: 1rem;
+        }
+
+        .hero-bar {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .pill {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            font-size: 0.92rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .card {
+            grid-column: span 6;
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 22px;
+            backdrop-filter: blur(12px);
+        }
+
+        .card.wide {
+            grid-column: span 12;
+        }
+
+        .card h2 {
+            margin: 0 0 6px;
+            font-size: 1.35rem;
+        }
+
+        .card p {
+            margin: 0 0 18px;
+            color: var(--muted);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.92rem;
+            color: var(--muted);
+        }
+
+        input, select, button, textarea {
+            font: inherit;
+        }
+
+        input, select {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 12px 14px;
+            background: var(--panel-strong);
+            color: var(--text);
+        }
+
+        button {
+            border: 0;
+            border-radius: 14px;
+            padding: 12px 16px;
+            background: var(--accent);
+            color: white;
+            cursor: pointer;
+            transition: transform 140ms ease, background 140ms ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            background: var(--accent-strong);
+        }
+
+        button.secondary {
+            background: #e9dfd1;
+            color: #3a2f27;
+        }
+
+        button.secondary:hover {
+            background: #ded1c0;
+        }
+
+        .actions {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .status {
+            margin-top: 16px;
+            min-height: 24px;
+            font-size: 0.94rem;
+            color: var(--muted);
+        }
+
+        .status.error {
+            color: var(--danger);
+        }
+
+        .status.success {
+            color: var(--accent-strong);
+        }
+
+        .list {
+            margin-top: 18px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .list-item {
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.66);
+        }
+
+        .list-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .metric {
+            padding: 16px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 243, 232, 0.88));
+            border: 1px solid var(--line);
+        }
+
+        .metric span {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .metric strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 1.4rem;
+        }
+
+        @media (max-width: 960px) {
+            .card,
+            .card.wide {
+                grid-column: span 12;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .shell {
+                width: min(100% - 20px, 1240px);
+                margin-top: 20px;
+            }
+
+            .hero,
+            .card {
+                padding: 18px;
+            }
+
+            .form-grid,
+            .summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <section class="hero">
+            <h1>Gerente Financeiro</h1>
+            <p>Interface web local para testar o backend, cadastrar dados e validar os relatórios e a cotação de moedas sem depender de Postman ou Swagger.</p>
+            <div class="hero-bar">
+                <div class="pill">API .NET 9</div>
+                <div class="pill">SQL Server LocalDB</div>
+                <div class="pill">Cotação em tempo real</div>
+            </div>
+        </section>
+
+        <section class="grid">
+            <article class="card">
+                <h2>Usuários</h2>
+                <p>Cadastre um usuário e use o identificador retornado nas próximas operações.</p>
+                <div class="form-grid">
+                    <label>Nome
+                        <input id="userName" placeholder="Maria Silva">
+                    </label>
+                    <label>E-mail
+                        <input id="userEmail" placeholder="maria@email.com">
+                    </label>
+                    <label>Senha
+                        <input id="userPassword" type="password" placeholder="123456">
+                    </label>
+                </div>
+                <div class="actions">
+                    <button id="createUserBtn">Criar usuário</button>
+                    <button class="secondary" id="loadUsersBtn">Listar usuários</button>
+                </div>
+                <div class="status" id="usersStatus"></div>
+                <div class="list" id="usersList"></div>
+            </article>
+
+            <article class="card">
+                <h2>Categorias</h2>
+                <p>Cadastre categorias de receita e despesa para associar às transações.</p>
+                <div class="form-grid">
+                    <label>Nome
+                        <input id="categoryName" placeholder="Salário">
+                    </label>
+                    <label>Tipo
+                        <select id="categoryType">
+                            <option value="1">Receita</option>
+                            <option value="2">Despesa</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="actions">
+                    <button id="createCategoryBtn">Criar categoria</button>
+                    <button class="secondary" id="loadCategoriesBtn">Listar categorias</button>
+                </div>
+                <div class="status" id="categoriesStatus"></div>
+                <div class="list" id="categoriesList"></div>
+            </article>
+
+            <article class="card wide">
+                <h2>Transações</h2>
+                <p>Crie receitas e despesas, consulte a lista e gere relatório mensal.</p>
+                <div class="form-grid">
+                    <label>Descrição
+                        <input id="transactionDescription" placeholder="Salário de abril">
+                    </label>
+                    <label>Valor
+                        <input id="transactionAmount" type="number" min="0" step="0.01" placeholder="3500">
+                    </label>
+                    <label>Data
+                        <input id="transactionDate" type="date">
+                    </label>
+                    <label>Tipo
+                        <select id="transactionType">
+                            <option value="1">Receita</option>
+                            <option value="2">Despesa</option>
+                        </select>
+                    </label>
+                    <label>Usuário
+                        <select id="transactionUserId"></select>
+                    </label>
+                    <label>Categoria
+                        <select id="transactionCategoryId"></select>
+                    </label>
+                </div>
+                <div class="actions">
+                    <button id="createTransactionBtn">Criar transação</button>
+                    <button class="secondary" id="loadTransactionsBtn">Listar transações</button>
+                </div>
+                <div class="status" id="transactionsStatus"></div>
+                <div class="list" id="transactionsList"></div>
+            </article>
+
+            <article class="card">
+                <h2>Relatório mensal</h2>
+                <p>Veja o total de receitas, despesas e saldo do mês selecionado.</p>
+                <div class="form-grid">
+                    <label>Usuário
+                        <select id="reportUserId"></select>
+                    </label>
+                    <label>Ano
+                        <input id="reportYear" type="number" min="2000" step="1">
+                    </label>
+                    <label>Mês
+                        <input id="reportMonth" type="number" min="1" max="12" step="1">
+                    </label>
+                </div>
+                <div class="actions">
+                    <button id="loadReportBtn">Gerar relatório</button>
+                </div>
+                <div class="status" id="reportStatus"></div>
+                <div class="summary" id="reportSummary"></div>
+                <div class="list" id="reportTransactions"></div>
+            </article>
+
+            <article class="card">
+                <h2>Cotação</h2>
+                <p>Consulte o valor convertido em tempo real pela integração externa.</p>
+                <div class="form-grid">
+                    <label>Moeda base
+                        <input id="baseCurrency" value="USD" maxlength="3">
+                    </label>
+                    <label>Moeda destino
+                        <input id="targetCurrency" value="BRL" maxlength="3">
+                    </label>
+                    <label>Valor
+                        <input id="exchangeAmount" type="number" min="0" step="0.01" value="10">
+                    </label>
+                </div>
+                <div class="actions">
+                    <button id="loadExchangeBtn">Consultar cotação</button>
+                </div>
+                <div class="status" id="exchangeStatus"></div>
+                <div class="list" id="exchangeResult"></div>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        const typeLabels = {
+            1: "Receita",
+            2: "Despesa"
+        };
+
+        const endpoints = {
+            users: "/api/users",
+            categories: "/api/categories",
+            transactions: "/api/transactions",
+            reports: "/api/reports/monthly",
+            exchange: "/api/exchangerates/latest"
+        };
+
+        const els = {
+            usersList: document.getElementById("usersList"),
+            usersStatus: document.getElementById("usersStatus"),
+            categoriesList: document.getElementById("categoriesList"),
+            categoriesStatus: document.getElementById("categoriesStatus"),
+            transactionsList: document.getElementById("transactionsList"),
+            transactionsStatus: document.getElementById("transactionsStatus"),
+            reportStatus: document.getElementById("reportStatus"),
+            reportSummary: document.getElementById("reportSummary"),
+            reportTransactions: document.getElementById("reportTransactions"),
+            exchangeStatus: document.getElementById("exchangeStatus"),
+            exchangeResult: document.getElementById("exchangeResult"),
+            transactionUserId: document.getElementById("transactionUserId"),
+            transactionCategoryId: document.getElementById("transactionCategoryId"),
+            reportUserId: document.getElementById("reportUserId")
+        };
+
+        document.getElementById("transactionDate").valueAsDate = new Date();
+        document.getElementById("reportYear").value = new Date().getFullYear();
+        document.getElementById("reportMonth").value = new Date().getMonth() + 1;
+
+        function setStatus(target, message, type) {
+            target.textContent = message || "";
+            target.className = `status${type ? ` ${type}` : ""}`;
+        }
+
+        function renderList(target, items) {
+            target.innerHTML = items.length
+                ? items.join("")
+                : `<div class="list-item"><span class="muted">Nenhum registro encontrado.</span></div>`;
+        }
+
+        async function request(url, options = {}) {
+            const response = await fetch(url, {
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(options.headers || {})
+                },
+                ...options
+            });
+
+            if (!response.ok) {
+                let message = "Erro ao processar a requisição.";
+
+                try {
+                    const error = await response.json();
+                    message = error.detail || error.title || message;
+
+                    if (error.errors) {
+                        const details = Object.values(error.errors).flat().join(" ");
+                        message = `${message} ${details}`.trim();
+                    }
+                } catch {
+                }
+
+                throw new Error(message);
+            }
+
+            if (response.status === 204) {
+                return null;
+            }
+
+            return response.json();
+        }
+
+        function syncUserSelects(users) {
+            const options = users.map(user => `<option value="${user.id}">${user.name} - ${user.email}</option>`).join("");
+            els.transactionUserId.innerHTML = options;
+            els.reportUserId.innerHTML = options;
+        }
+
+        function syncCategorySelect(categories) {
+            const options = categories.map(category => `<option value="${category.id}">${category.name} (${typeLabels[category.type]})</option>`).join("");
+            els.transactionCategoryId.innerHTML = options;
+        }
+
+        async function loadUsers() {
+            setStatus(els.usersStatus, "Carregando usuários...");
+            const users = await request(endpoints.users);
+
+            renderList(els.usersList, users.map(user => `
+                <div class="list-item">
+                    <strong>${user.name}</strong>
+                    <div class="muted">${user.email}</div>
+                    <div class="muted">ID: ${user.id}</div>
+                </div>
+            `));
+
+            syncUserSelects(users);
+            setStatus(els.usersStatus, `${users.length} usuário(s) carregado(s).`, "success");
+            return users;
+        }
+
+        async function loadCategories() {
+            setStatus(els.categoriesStatus, "Carregando categorias...");
+            const categories = await request(endpoints.categories);
+
+            renderList(els.categoriesList, categories.map(category => `
+                <div class="list-item">
+                    <strong>${category.name}</strong>
+                    <div class="muted">Tipo: ${typeLabels[category.type]}</div>
+                    <div class="muted">ID: ${category.id}</div>
+                </div>
+            `));
+
+            syncCategorySelect(categories);
+            setStatus(els.categoriesStatus, `${categories.length} categoria(s) carregada(s).`, "success");
+            return categories;
+        }
+
+        async function loadTransactions() {
+            setStatus(els.transactionsStatus, "Carregando transações...");
+            const transactions = await request(endpoints.transactions);
+
+            renderList(els.transactionsList, transactions.map(transaction => `
+                <div class="list-item">
+                    <strong>${transaction.description}</strong>
+                    <div class="muted">Valor: R$ ${Number(transaction.amount).toFixed(2)}</div>
+                    <div class="muted">Tipo: ${typeLabels[transaction.type]}</div>
+                    <div class="muted">Usuário: ${transaction.userName || transaction.userId}</div>
+                    <div class="muted">Categoria: ${transaction.categoryName || transaction.categoryId}</div>
+                    <div class="muted">Data: ${new Date(transaction.date).toLocaleDateString("pt-BR")}</div>
+                </div>
+            `));
+
+            setStatus(els.transactionsStatus, `${transactions.length} transação(ões) carregada(s).`, "success");
+        }
+
+        async function createUser() {
+            const payload = {
+                name: document.getElementById("userName").value,
+                email: document.getElementById("userEmail").value,
+                password: document.getElementById("userPassword").value
+            };
+
+            setStatus(els.usersStatus, "Criando usuário...");
+            await request(endpoints.users, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            setStatus(els.usersStatus, "Usuário criado com sucesso.", "success");
+            await loadUsers();
+        }
+
+        async function createCategory() {
+            const payload = {
+                name: document.getElementById("categoryName").value,
+                type: Number(document.getElementById("categoryType").value)
+            };
+
+            setStatus(els.categoriesStatus, "Criando categoria...");
+            await request(endpoints.categories, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            setStatus(els.categoriesStatus, "Categoria criada com sucesso.", "success");
+            await loadCategories();
+        }
+
+        async function createTransaction() {
+            const payload = {
+                description: document.getElementById("transactionDescription").value,
+                amount: Number(document.getElementById("transactionAmount").value),
+                date: new Date(document.getElementById("transactionDate").value).toISOString(),
+                type: Number(document.getElementById("transactionType").value),
+                userId: document.getElementById("transactionUserId").value,
+                categoryId: document.getElementById("transactionCategoryId").value
+            };
+
+            setStatus(els.transactionsStatus, "Criando transação...");
+            await request(endpoints.transactions, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            setStatus(els.transactionsStatus, "Transação criada com sucesso.", "success");
+            await loadTransactions();
+        }
+
+        async function loadReport() {
+            const userId = document.getElementById("reportUserId").value;
+            const year = document.getElementById("reportYear").value;
+            const month = document.getElementById("reportMonth").value;
+
+            setStatus(els.reportStatus, "Gerando relatório...");
+            const report = await request(`${endpoints.reports}?userId=${userId}&year=${year}&month=${month}`);
+
+            els.reportSummary.innerHTML = `
+                <div class="metric">
+                    <span>Receitas</span>
+                    <strong>R$ ${Number(report.totalIncome).toFixed(2)}</strong>
+                </div>
+                <div class="metric">
+                    <span>Despesas</span>
+                    <strong>R$ ${Number(report.totalExpense).toFixed(2)}</strong>
+                </div>
+                <div class="metric">
+                    <span>Saldo</span>
+                    <strong>R$ ${Number(report.balance).toFixed(2)}</strong>
+                </div>
+            `;
+
+            renderList(els.reportTransactions, report.transactions.map(transaction => `
+                <div class="list-item">
+                    <strong>${transaction.description}</strong>
+                    <div class="muted">Categoria: ${transaction.categoryName}</div>
+                    <div class="muted">Tipo: ${typeLabels[transaction.type]}</div>
+                    <div class="muted">Valor: R$ ${Number(transaction.amount).toFixed(2)}</div>
+                </div>
+            `));
+
+            setStatus(els.reportStatus, "Relatório carregado.", "success");
+        }
+
+        async function loadExchange() {
+            const baseCurrency = document.getElementById("baseCurrency").value;
+            const targetCurrency = document.getElementById("targetCurrency").value;
+            const amount = document.getElementById("exchangeAmount").value;
+
+            setStatus(els.exchangeStatus, "Consultando cotação...");
+            const quote = await request(`${endpoints.exchange}?baseCurrency=${encodeURIComponent(baseCurrency)}&targetCurrency=${encodeURIComponent(targetCurrency)}&amount=${amount}`);
+
+            renderList(els.exchangeResult, [`
+                <div class="list-item">
+                    <strong>${quote.baseCurrency} → ${quote.targetCurrency}</strong>
+                    <div class="muted">Cotação: ${quote.rate}</div>
+                    <div class="muted">Valor convertido: ${Number(quote.convertedAmount).toFixed(4)}</div>
+                    <div class="muted">Fonte: ${quote.source}</div>
+                    <div class="muted">Data: ${new Date(quote.quotedAt).toLocaleDateString("pt-BR")}</div>
+                </div>
+            `]);
+
+            setStatus(els.exchangeStatus, "Cotação carregada.", "success");
+        }
+
+        async function bootstrap() {
+            try {
+                await Promise.all([loadUsers(), loadCategories(), loadTransactions()]);
+            } catch (error) {
+                const message = error instanceof Error ? error.message : "Falha ao carregar dados iniciais.";
+                setStatus(els.usersStatus, message, "error");
+                setStatus(els.categoriesStatus, message, "error");
+                setStatus(els.transactionsStatus, message, "error");
+            }
+        }
+
+        document.getElementById("createUserBtn").addEventListener("click", () => handleAction(createUser, els.usersStatus));
+        document.getElementById("loadUsersBtn").addEventListener("click", () => handleAction(loadUsers, els.usersStatus));
+        document.getElementById("createCategoryBtn").addEventListener("click", () => handleAction(createCategory, els.categoriesStatus));
+        document.getElementById("loadCategoriesBtn").addEventListener("click", () => handleAction(loadCategories, els.categoriesStatus));
+        document.getElementById("createTransactionBtn").addEventListener("click", () => handleAction(createTransaction, els.transactionsStatus));
+        document.getElementById("loadTransactionsBtn").addEventListener("click", () => handleAction(loadTransactions, els.transactionsStatus));
+        document.getElementById("loadReportBtn").addEventListener("click", () => handleAction(loadReport, els.reportStatus));
+        document.getElementById("loadExchangeBtn").addEventListener("click", () => handleAction(loadExchange, els.exchangeStatus));
+
+        async function handleAction(action, statusElement) {
+            try {
+                await action();
+            } catch (error) {
+                const message = error instanceof Error ? error.message : "Falha ao processar a requisição.";
+                setStatus(statusElement, message, "error");
+            }
+        }
+
+        bootstrap();
+    </script>
+</body>
+</html>

@@ -1,6 +1,65 @@
 @FinanceManager.API_HostAddress = http://localhost:5221
+@UserId = 00000000-0000-0000-0000-000000000000
+@CategoryId = 00000000-0000-0000-0000-000000000000
+@TransactionId = 00000000-0000-0000-0000-000000000000
 
-GET {{FinanceManager.API_HostAddress}}/weatherforecast/
+### Criar usuario
+POST {{FinanceManager.API_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Maria Silva",
+  "email": "maria.silva@email.com",
+  "password": "123456"
+}
+
+### Listar usuarios
+GET {{FinanceManager.API_HostAddress}}/api/users
 Accept: application/json
 
-###
+### Criar categoria de receita
+POST {{FinanceManager.API_HostAddress}}/api/categories
+Content-Type: application/json
+
+{
+  "name": "Salario",
+  "type": 1
+}
+
+### Criar categoria de despesa
+POST {{FinanceManager.API_HostAddress}}/api/categories
+Content-Type: application/json
+
+{
+  "name": "Moradia",
+  "type": 2
+}
+
+### Listar categorias
+GET {{FinanceManager.API_HostAddress}}/api/categories
+Accept: application/json
+
+### Criar transacao
+POST {{FinanceManager.API_HostAddress}}/api/transactions
+Content-Type: application/json
+
+{
+  "description": "Salario de abril",
+  "amount": 3500.00,
+  "date": "2026-04-07T00:00:00",
+  "type": 1,
+  "userId": "{{UserId}}",
+  "categoryId": "{{CategoryId}}"
+}
+
+### Listar transacoes
+GET {{FinanceManager.API_HostAddress}}/api/transactions
+Accept: application/json
+
+### Relatorio mensal
+GET {{FinanceManager.API_HostAddress}}/api/reports/monthly?userId={{UserId}}&year=2026&month=4
+Accept: application/json
+
+### Cotacao
+GET {{FinanceManager.API_HostAddress}}/api/exchangerates/latest?baseCurrency=USD&targetCurrency=BRL&amount=10
+Accept: application/json

@@ -1,11 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FinanceManager.Domain.Entities;
-using FinanceManager.Domain;
-
 namespace FinanceManager.Domain.Entities;
 
 public class User : BaseEntity
@@ -16,6 +8,5 @@ public class User : BaseEntity
 
     public string PasswordHash { get; set; } = string.Empty;
 
-    public ICollection<Transaction>? Transactions { get; set; }
-
+    public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }
