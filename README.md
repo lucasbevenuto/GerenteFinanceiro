@@ -240,14 +240,6 @@ Você pode alterar a URL base da integração pela chave:
 }
 ```
 
-## Próximos passos sugeridos
-
-- adicionar autenticação e autorização
-- criar migrações do Entity Framework Core
-- ampliar cobertura de testes
-- adicionar paginação e filtros mais avançados
-- evoluir a interface web
-
 ## Autor
 
 Projeto mantido por Lucas Bevenuto.
