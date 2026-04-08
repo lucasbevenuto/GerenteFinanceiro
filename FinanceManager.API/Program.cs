@@ -25,12 +25,14 @@ builder.Services.AddDbContext<FinanceDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<IMaintenanceRepository, MaintenanceRepository>();
 builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<ReportService>();
 builder.Services.AddScoped<ExchangeRateAppService>();
+builder.Services.AddScoped<MaintenanceService>();
 
 builder.Services.AddHttpClient<IExchangeRateService, FrankfurterExchangeRateService>((serviceProvider, client) =>
 {

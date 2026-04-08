@@ -398,6 +398,15 @@
                 <div class="status" id="exchangeStatus"></div>
                 <div class="list" id="exchangeResult"></div>
             </article>
+
+            <article class="card wide">
+                <h2>Limpeza geral</h2>
+                <p>Remove todos os usuários, categorias e transações cadastrados para reiniciar os testes do sistema.</p>
+                <div class="actions">
+                    <button id="clearAllBtn">Limpar tudo</button>
+                </div>
+                <div class="status" id="maintenanceStatus"></div>
+            </article>
         </section>
     </main>
 
@@ -412,7 +421,8 @@
             categories: "/api/categories",
             transactions: "/api/transactions",
             reports: "/api/reports/monthly",
-            exchange: "/api/exchangerates/latest"
+            exchange: "/api/exchangerates/latest",
+            maintenance: "/api/maintenance/clear-all"
         };
 
         const els = {
@@ -427,6 +437,7 @@
             reportTransactions: document.getElementById("reportTransactions"),
             exchangeStatus: document.getElementById("exchangeStatus"),
             exchangeResult: document.getElementById("exchangeResult"),
+            maintenanceStatus: document.getElementById("maintenanceStatus"),
             transactionUserId: document.getElementById("transactionUserId"),
             transactionCategoryId: document.getElementById("transactionCategoryId"),
             reportUserId: document.getElementById("reportUserId")
@@ -652,6 +663,27 @@
             setStatus(els.exchangeStatus, "Cotação carregada.", "success");
         }
 
+        async function clearAll() {
+            const confirmed = window.confirm("Isso vai remover todos os dados cadastrados. Deseja continuar?");
+            if (!confirmed) {
+                return;
+            }
+
+            setStatus(els.maintenanceStatus, "Limpando dados...");
+            await request(endpoints.maintenance, {
+                method: "DELETE"
+            });
+
+            els.reportSummary.innerHTML = "";
+            els.reportTransactions.innerHTML = "";
+            els.exchangeResult.innerHTML = "";
+
+            await Promise.all([loadUsers(), loadCategories(), loadTransactions()]);
+            setStatus(els.reportStatus, "");
+            setStatus(els.exchangeStatus, "");
+            setStatus(els.maintenanceStatus, "Todos os dados cadastrados foram removidos.", "success");
+        }
+
         async function bootstrap() {
             try {
                 await Promise.all([loadUsers(), loadCategories(), loadTransactions()]);
@@ -671,6 +703,7 @@
         document.getElementById("loadTransactionsBtn").addEventListener("click", () => handleAction(loadTransactions, els.transactionsStatus));
         document.getElementById("loadReportBtn").addEventListener("click", () => handleAction(loadReport, els.reportStatus));
         document.getElementById("loadExchangeBtn").addEventListener("click", () => handleAction(loadExchange, els.exchangeStatus));
+        document.getElementById("clearAllBtn").addEventListener("click", () => handleAction(clearAll, els.maintenanceStatus));
 
         async function handleAction(action, statusElement) {
             try {

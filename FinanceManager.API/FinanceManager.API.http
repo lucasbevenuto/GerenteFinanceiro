@@ -63,3 +63,6 @@ Accept: application/json
 ### Cotacao
 GET {{FinanceManager.API_HostAddress}}/api/exchangerates/latest?baseCurrency=USD&targetCurrency=BRL&amount=10
 Accept: application/json
+
+### Limpar todos os dados cadastrados
+DELETE {{FinanceManager.API_HostAddress}}/api/maintenance/clear-all

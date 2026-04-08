@@ -148,3 +148,14 @@ internal sealed class FakePasswordHasher : IPasswordHasher
 {
     public string Hash(string password) => $"hashed::{password}";
 }
+
+internal sealed class InMemoryMaintenanceRepository : IMaintenanceRepository
+{
+    public bool WasCleared { get; private set; }
+
+    public Task ClearAllAsync(CancellationToken cancellationToken = default)
+    {
+        WasCleared = true;
+        return Task.CompletedTask;
+    }
+}
