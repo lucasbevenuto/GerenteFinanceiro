@@ -4752,7 +4752,8 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Ti_be\\.nuget\\packages\\": {}
+    "C:\\Users\\Ti_be\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
@@ -4763,8 +4764,14 @@
       "packagesPath": "C:\\Users\\Ti_be\\.nuget\\packages\\",
       "outputPath": "C:\\projects\\Gerente Financeiro\\FinanceManager\\FinanceManager.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\projects\\Gerente Financeiro\\FinanceManager\\NuGet.Config"
+        "C:\\projects\\Gerente Financeiro\\FinanceManager\\NuGet.Config",
+        "C:\\Users\\Ti_be\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
